@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Aurē — Virtual Ring Try-On</title>
+  <link rel="stylesheet" href="src/style.css" />
+
+  <!-- MediaPipe Hands -->
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+  <!-- Three.js -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/examples/js/loaders/DRACOLoader.js"></script>
+</head>
+<body>
+
+  <!-- Splash / Loader -->
+  <div id="splash">
+    <div class="splash-inner">
+      <div class="logo-mark">◈</div>
+      <h1 class="brand">Aurē</h1>
+      <p class="tagline">Virtual Ring Try-On</p>
+      <div class="loader-bar"><div class="loader-fill" id="loaderFill"></div></div>
+      <p class="loader-text" id="loaderText">Initialising hand tracking…</p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="hidden">
+
+    <!-- Header -->
+    <header>
+      <div class="header-logo">◈ <span>Aurē</span></div>
+      <nav class="header-nav">
+        <button class="nav-btn active" id="btnTryOn">Try-On</button>
+        <button class="nav-btn" id="btnGuide">How to use</button>
+      </nav>
+      <div class="header-right">
+        <span class="status-dot" id="statusDot"></span>
+        <span class="status-label" id="statusLabel">Searching…</span>
+      </div>
+    </header>
+
+    <!-- Canvas stack -->
+    <div class="viewport-wrapper">
+      <video id="videoFeed" playsinline autoplay muted></video>
+      <canvas id="mirrorCanvas"></canvas>   <!-- mirrored video draw -->
+      <canvas id="overlayCanvas"></canvas>  <!-- landmark debug (optional) -->
+      <canvas id="threeCanvas"></canvas>    <!-- Three.js ring -->
+
+      <!-- Finger selector -->
+      <div class="finger-picker" id="fingerPicker">
+        <span class="fp-label">Ring finger</span>
+        <div class="fp-buttons">
+          <button class="fp-btn active" data-finger="ring_right">Right ♦</button>
+          <button class="fp-btn" data-finger="ring_left">Left ♦</button>
+          <button class="fp-btn" data-finger="index_right">Index R</button>
+          <button class="fp-btn" data-finger="index_left">Index L</button>
+        </div>
+      </div>
+
+      <!-- Scale control -->
+      <div class="scale-control" id="scaleControl">
+        <label>Ring Size</label>
+        <input type="range" id="ringScale" min="0.4" max="2.0" step="0.05" value="1.0" />
+        <span id="scaleVal">1.0×</span>
+      </div>
+
+      <!-- Upload custom ring -->
+      <div class="upload-btn-wrap" id="uploadWrap">
+        <label for="glbUpload" class="upload-btn">⬆ Upload Ring (.glb)</label>
+        <input type="file" id="glbUpload" accept=".glb,.gltf" />
+      </div>
+
+      <!-- No-hand message -->
+      <div class="no-hand-msg hidden" id="noHandMsg">
+        ✋ Show your hand to the camera
+      </div>
+    </div>
+
+    <!-- Guide panel -->
+    <div id="guidePanel" class="panel hidden">
+      <h2>How to use</h2>
+      <ol>
+        <li>Allow camera access when prompted.</li>
+        <li>Hold your hand open in front of the camera, palm facing you.</li>
+        <li>The ring will snap onto your selected finger automatically.</li>
+        <li>Use <strong>Ring Size</strong> slider to adjust fit.</li>
+        <li>Change which finger to try with the <strong>finger buttons</strong>.</li>
+        <li>Upload your own <code>.glb</code> ring model for a custom preview.</li>
+      </ol>
+      <button id="closeGuide" class="cta-btn">Got it →</button>
+    </div>
+
+  </div>
+
+  <script src="src/app.js" type="module"></script>
+</body>
+</html>

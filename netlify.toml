@@ -1,0 +1,8 @@
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Required for SharedArrayBuffer / MediaPipe
+    Cross-Origin-Opener-Policy = "same-origin"
+    Cross-Origin-Embedder-Policy = "require-corp"
+    # Camera permissions policy
+    Permissions-Policy = "camera=*"
